@@ -403,7 +403,9 @@ describe Cocoon do
     end
 
     it "raises an error if cannot reflect on association" do
-      expect { @tester.create_object(double(:object => Comment.new), :not_existing) }.to raise_error /association/i
+      object = double("AnyNonActiveRecordObject")
+      object.should_receive(:build_non_reflectable).and_return 'custom'
+      @tester.create_object(double(:object => object), :non_reflectable).should == 'custom'
     end
 
     it "creates an association if object responds to 'build_association' as singular" do
